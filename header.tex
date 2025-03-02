@@ -1,0 +1,140 @@
+% ------------------------------------------------------------------------------ %
+% -----------------------      Base for every .tex file   ---------------------- %
+% ------------------------------------------------------------------------------ %
+
+\usepackage[dvipsnames]{xcolor}
+\usepackage{mathtools}
+\usepackage{amssymb}
+\usepackage{amsthm}
+\usepackage{amsmath}
+\usepackage{framed}
+\usepackage{wasysym}
+\usepackage{geometry}
+\usepackage{cancel}
+\usepackage{blindtext}
+\usepackage{pgfplots}
+\usepackage{graphicx}
+\usepackage{lastpage}
+\usepackage[most]{tcolorbox} 
+\usepackage{multicol}
+\usepackage{soul}
+\usepackage{listings}
+\usepackage{algorithm}
+\usepackage{algorithmic}
+\usepackage{booktabs}
+\usepackage{tikz}
+\usepackage{pifont}
+
+% Libraries
+\usetikzlibrary{shapes,shapes.geometric, positioning, arrows}
+
+\geometry{%
+	left=15mm,
+	right=15mm,
+	top=25mm,
+	bottom=25mm,
+	bindingoffset=0mm,
+	headheight=30pt,% output from geometry tells you what this needs to be set to as a minimum
+}
+
+% Header and Footer
+\pagestyle{headandfoot}
+\firstpageheadrule
+\runningheadrule
+\firstpageheader{Convex Optimization}{\today}{Jonathan Schnell}
+\runningheader{Convex Optimization}{}{Jonathan Schnell}
+\firstpagefooter{}{Page \thepage\ of \numpages}{}
+\runningfooter{}{Page \thepage\ of \numpages}{}
+
+% Commands
+\newcommand{\imp}[1]{\ul{\textbf{#1}}}
+\newcommand{\dproduct}[1]{\left\langle #1 \right\rangle}
+\newcommand{\norm}[1]{\left\lVert #1 \right\rVert}
+\renewcommand{\vector}[1]{\begin{pmatrix} #1 \end{pmatrix}}
+\newcommand{\abs}[1]{\left| #1 \right|}
+\newcommand{\floor}[1]{\lfloor #1 \rfloor}
+\newcommand{\ceil}[1]{\lceil #1 \rceil}
+\newcommand{\fracpart}[2]{\frac{\partial #1}{\partial #2}}
+\newcommand{\set}[2]{\left\{#1 \ \middle|\ #2\right\}}
+\renewcommand{\hat}[1]{\widehat{#1}}
+
+\newcommand{\Ker}{\operatorname{Ker}}
+\renewcommand{\Im}{\operatorname{Im}}
+\renewcommand{\Re}{\operatorname{Re}}
+\renewcommand{\dim}{\operatorname{dim}}
+\renewcommand{\div}{\operatorname{div}}
+\newcommand{\rot}{\operatorname{rot}}
+\newcommand{\grad}{\operatorname{grad}}
+\newcommand{\vol}{\operatorname{vol}}
+\newcommand{\supp}{\operatorname{supp}}
+\renewcommand{\div}{\operatorname{div}}
+\newcommand*{\vertbar}{\rule[-1ex]{0.5pt}{2.5ex}}
+\newcommand*{\horzbar}{\rule[.5ex]{2.5ex}{0.5pt}}
+
+\theoremstyle{definition}
+\newtheorem*{definition}{Definition}
+\newtheorem*{beispiel}{Beispiel}
+\newtheorem*{remark}{Remark}
+
+\theoremstyle{plain}
+\newtheorem*{proposition}{Proposition}
+\newtheorem*{satz}{Satz}
+\newtheorem*{korollar}{Korollar}
+\newtheorem*{lemma}{Lemma}
+\newtheorem*{theorem}{Theorem}
+
+
+% Quote
+\newtcolorbox{zitat}[1]{%
+	colback=lightGray,
+	grow to right by=-10mm,
+	grow to left by=-10mm, 
+	boxrule=0pt,
+	boxsep=0pt,
+	breakable,
+	enhanced jigsaw,
+	borderline west={4pt}{0pt}{gray},
+	#1
+}
+
+% Use colors in equations
+\newcommand{\highlight}[2]{\colorbox{#1}{$#2$}}%
+\definecolor{lightGray}{gray}{0.9} 
+
+% To add shortcut of script Letters in Equations
+\newcommand{\s}[1]{\mathcal{#1}}
+\newcommand*\circled[1]{\tikz[baseline=(char.base)]{
+            \node[shape=circle,draw,inner sep=2pt] (char) {#1};}}
+\newcommand{\cmark}{\ding{51}}
+\newcommand{\xmark}{\ding{55}}
+
+
+\newenvironment{claim}[1]{
+		\par\noindent
+		\textbf{Claim.} #1
+		\begin{tcolorbox}[blanker, top=3mm, bottom=3mm, left=3mm, borderline west={1pt}{0mm}{black}]
+		\noindent\textit{Proof of Claim.} 
+}{
+	\hfill$\blacksquare$	
+	\end{tcolorbox}\noindent
+}
+
+% To add shortcut of number's set Z
+\newcommand*{\Z}{\mathbb{Z}}
+\newcommand*{\N}{\mathbb{N}}
+\newcommand*{\R}{\mathbb{R}}
+\newcommand*{\Q}{\mathbb{Q}}
+\newcommand*{\C}{\mathbb{C}}
+\newcommand*{\F}{\mathbb{F}}
+\newcommand*{\K}{\mathbb{K}}
+
+% To add shortcut of empty set
+\renewcommand*{\o}{\varnothing}
+\pgfplotsset{compat=1.9}
+
+\everymath{\displaystyle}
+
+% Line-Height
+\linespread{1.15}
+
+\graphicspath{{Files/}}

@@ -1,0 +1,97 @@
+\documentclass[answers]{exam}
+
+\input{header.tex}
+
+% ------------------------------
+
+\begin{document}
+
+	$ $
+	\begin{center}
+		\huge \textbf{Exercise session notes - Week 11}  \\ \vspace*{3mm}
+        \Large{Semidefinite Programs + Applications}
+	\end{center}
+	$ $\\
+
+    \section{Application: Markowitz portfolio optimization}
+
+    In this problem we have a budget $B$ that we want to invest in assets $1,\ldots, n$. At time $t = 0$ we know the prices of the assets as
+    $$ p_1^0,\ldots , p_n^0 $$
+    After some period of time we may know some predictions of the prices, and at time $t = T$ we know the distribution of the prices as 
+    $$ P_1^T,\ldots , P_n^T $$
+    which are random variables. In order to model the problem as a mathematical problem we define the Rate of Return:
+    $$ R_i = \frac{P_i^T}{p_i^0} - 1 $$
+    which essentially gives us the amount that we receive at $T$ by buying asset $i$. (if $R_i = 0$ then we receive the same amount, if $R_i = 1$ then we double the amount, if $R_i = -\tfrac{1}{2}$ then we lose half of the amount). \\ 
+    We then define our decision variables $x_i = $ fraction of the budget $B$ spent on asset $i$ (the vector $x$ is called portfolio). Then the final revenue/loss is the random variable 
+    $$ R^\top x = \sum_{i} R_i \cdot x_i $$
+    This RV has expected value 
+    $$ \mu^\top x := \sum_{i} x_i\cdot  \mathbb{E}[R_i]  $$
+    and variance 
+    $$ x^\top \Sigma x := \sum_{i,j} \operatorname*{Cov}(R_i, R_j)x_ix_j $$
+    Finally we can write our mathematical program as follows: 
+    \begin{itemize}
+        \item \textbf{Goal:} Minimize risk with lower bound on profit, as QP.
+        \begin{align*}
+            \min\quad x^\top \Sigma x& \\ 
+            \text{s.t}\quad \mu^\top x&\geq b \\ 
+            \textbf{1}^\top x &= 1 
+        \end{align*}
+        \item \textbf{Goal:} Maximize profit with upper bound on risk, as QCQP.
+        \begin{align*}
+            \max\quad \mu^\top x& \\ 
+            \text{s.t}\quad x^\top \Sigma x&\leq \gamma^2 \\ 
+            \textbf{1}^\top x &= 1 
+        \end{align*}
+        \item \textbf{Goal:} Maximize utility function (balance between profit and risk), as SOCP.
+        \begin{align*}
+            \max\quad \mu^\top x - \delta \sqrt{x^\top \Sigma x}& \\ 
+            \text{s.t}\quad \textbf{1}^\top x &= 1 
+        \end{align*}
+    \end{itemize}
+
+\section{Application: Max-Cut Problem}
+    We firstly recall the definition of a SemiDefinite Program:
+    \begin{align*}
+        \min\quad \operatorname{Tr}(CX)& \\ 
+        \text{s.t.}\quad \operatorname{Tr}(A_iX)& = b \\ 
+        X&\succeq 0
+    \end{align*}
+    As the objective function and the constraints are affine, and $X\succeq 0$ is equivalent to $X$ being in the positive semidefinite cone, we get SDP $\subseteq$ CP. In the lecture notes it is also proven SOCP $\subseteq$ CP, and thus we concluded the inclusions related to convex programs.\\
+
+    In the Max-Cut Problem we are given a graph $G=(V,E)$, with edge weights $w_e$ for $e\in E$ and $\sum_{e} w_e = 1$. The goal is to find a subset of vertices $S\subseteq V$ with cut value 
+    $$ c(S) := \sum_{e\in \delta(S)} w_e $$
+    maximized. For example the cut in the following graph has cut value $4$ and it is the maximum that we can achieve
+    \begin{center}
+        \includegraphics*[width=0.3\textwidth]{MaxCut.PNG}
+    \end{center}
+    Note that for general graphs this problem is NP-hard, on the other hand for bipartite graphs and complete graphs this problem becomes trivial. There is also a theorem that gives us the existence of a cut with cut value $ \geq \tfrac{1}{2}$ (see Ch. 7.5 in Lecture notes). 
+
+\subsection{Semidefinite Formulation}
+    We want to solve the mathematical problem 
+    $$ \max \quad \sum_{e\in \delta(S)} w_e\quad \text{s.t.}\quad S\subseteq V $$
+    To do that we first define the decision variables $x\in \{-1,1\}^{V}$ with 
+    $$ x_v = 1 \iff v\in S $$
+    Therefore we can write an equivalent program as 
+    \begin{align*}
+        \max\quad  \sum_{uv\in E} w_{uv} \cdot \left(\frac{1-x_ux_v}{2}\right) \quad \text{s.t.}\quad x\in \{-1,1\}^V
+    \end{align*}
+    Let us define the matrix $X = (x_u\cdot x_v)_{u,v\in V} \in \{-1,1\}^n\times n$, then we can write the program as 
+    \begin{align*}
+        \max \quad \operatorname{Tr}(WX) &= \sum_{uv} X_{u,v} W_{u,v} \\ 
+        \text{s.t.}\quad X_{ii} &= 1 \\ 
+        X &= xx^\top \\ 
+        x&\in \{-1,1\}^n 
+    \end{align*}
+    Finally we can drop the last two constraints and we get the SDP relaxation 
+    \begin{align*}
+        \max \quad \operatorname{Tr}(WX) &= \sum_{uv} X_{u,v} W_{u,v} \\ 
+        \text{s.t.}\quad X_{ii} &= 1 \\ 
+        X&\succeq 0 
+    \end{align*}
+    By solving this problem we end up with an approximation of $0.87856\ldots$ of the value of the max-cut. 
+
+
+
+
+
+\end{document}

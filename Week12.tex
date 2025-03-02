@@ -1,0 +1,99 @@
+\documentclass[answers]{exam}
+
+\input{header.tex}
+
+% ------------------------------
+
+\begin{document}
+
+	$ $
+	\begin{center}
+		\huge \textbf{Exercise session notes - Week 12}  \\ \vspace*{3mm}
+        \Large{Formulations as SDP + Schur Complement}
+	\end{center}
+	$ $\\
+
+    Consider a quadratic program of the form
+    \begin{align*}
+        \min\quad c^\top x &\\
+        x^\top Qx + b^\top x + d &\leq 0 
+    \end{align*}
+    If $Q$ is positive semi-definite, then this problem is convex and we can solve it efficiently via Newton Descent. But what if $Q$ has negative eigenvalues? Then the problem is no longer convex, but we can still solve it partially with a relaxation to a SDP. We first define the matrix $X = xx^\top$ which is a symmetric matrix and contains $x_ix_j$ on the $i$th row and $j$th column. This is often used when we have a quadratic form because then 
+    $$ x^\top Q x = \sum_{i,j} x_i Q_{ij} x_j = \sum_{i,j} X_{ij} Q_{ij} = \operatorname*{Tr}(XQ) = \dproduct{X, Q} $$
+    and this is an affine function on $S_+^n$. Therefore our QP is equivalent to 
+    \begin{align*}
+        \min \quad c^\top x& \\ 
+        \dproduct{X,Q} + b^\top x + d &\leq 0 \\ 
+        X &= xx^\top
+    \end{align*}
+    Finally we can relax the last constraint and we get the SDP
+    \begin{align*}
+        \min \quad c^\top x& \\ 
+        \dproduct{X,Q} + b^\top x + d &\leq 0 \\ 
+        X&\succeq 0
+    \end{align*}
+    Note that by solving this problem we obtain a lower bound on the optimal value of the QP. \\ 
+
+    A very important fact on positive semi-definite matrices is the Schur Complement: 
+    \begin{proposition}[Schur Complement]
+        Let $X$ be a symmetric block matrix 
+        $$ X = \begin{pmatrix}
+            A & B \\ B^\top & C
+        \end{pmatrix} $$
+        If $A\succ 0$ then 
+        $$ X\succeq 0 \iff C-B^\top A^{-1}B \succeq 0 $$
+        If $C\succ 0$ then 
+        $$ X\succeq 0 \iff A-B C^{-1}B^\top \succeq 0 $$
+    \end{proposition}
+    Consider the following $0$-$1$ QP
+    \begin{align*}
+        \max\quad y^\top B y& \\
+        y &\in  \{0,1\}^n
+    \end{align*}
+    We define as before $Y = y y^\top$ and note that 
+    $$ y_i^2 = y_i \implies \operatorname*{diag}(Y) = y $$
+    In particular we can write 
+    $$ Y = \operatorname*{diag}(Y) \operatorname*{diag}(Y)^\top $$
+    We can relax this constraint into the following 
+    $$ Y - \operatorname*{diag}(Y) \operatorname*{diag}(Y)^\top \succeq 0 $$
+    and by the Schur Complement we can write a relaxation of the QP program as the SDP 
+    \begin{align*}
+        \max \quad\dproduct{Y, B}& \\ 
+        \begin{pmatrix}
+            Y & \operatorname*{diag}(Y) \\ \operatorname*{diag}(Y)^\top & 1
+        \end{pmatrix} &\succeq 0 \\ 
+        Y&\succeq 0
+    \end{align*}
+    As before, by solving this problem we obtain a lower bound on the optimal value of the $0$-$1$ QP. \\ 
+
+    Another application of the Schur Complement comes from geometry: We are given $k$ points $z_1, \ldots, z_k\in \R^n$ and we want to find an Ellipse $E$ that contains all the points and has minimal volume. We can describe an Ellipse as 
+    $$ E_{P, c} = \set{x}{(x-c)^\top P(x-c)} $$
+    where $c\in \R^n$ is the center of the Ellipse and $P\succ 0$ is the matrix that gives us the stretch of the Ellipse (if $P=I$ then we obtain a circle). Moreover the volume of the Ellipse is proportional to 
+    $$ \vol(E_{P,c}) \sim \sqrt{\operatorname*{det}(P^{-1})} $$
+    Therefore we can model this problem as the following abstract program
+    \begin{alignat*}{3}
+        \min_{P,c} &&\quad \operatorname*{vol}(E_{P,c}) &\sim \sqrt{\operatorname*{det}(P^{-1})} \\ 
+        \text{s.t.}&&\quad  z_i &\in E_{P,c} \qquad \forall i
+    \end{alignat*}
+    Since the function $\log(\cdot)$ is monotone, we can apply that to the objective function and the problem remains the same. 
+    \begin{alignat*}{3}
+        \min_{P,c} &&\quad \log\left(\sqrt{\operatorname*{det}(P^{-1})}\right) &= -\frac{1}{2} \log\det(P) \\ 
+        \text{s.t.}&&\quad  (z_i-c)^\top P(z_i - c) &\leq 1 \qquad \forall i
+    \end{alignat*}
+    Recall that $\log\det(\cdot)$ is a concave function. Since $P\succ 0$ we can write it as $P = B^\top B$ and we get 
+    \begin{alignat*}{3}
+        \min_{B, c} &&\quad -\frac{1}{2} \log\det(B^\top B) &= -\log\det(B) \\ 
+        \text{s.t.}&&\quad  1- (z_i-c)^\top B^\top B(z_i - c) &\geq 0 \qquad \forall i
+    \end{alignat*}
+    Finally, we can define $d := Bc$ and apply the Schur Complement to the constraint so that obtain the SDP 
+    \begin{alignat*}{3}
+        \min_{B, d} &&\quad -\log\det(B)& \\ 
+        \text{s.t.}&&\quad \begin{pmatrix}
+            I & Bz_i - d \\ 
+            (Bz_i - d)^\top & 1
+        \end{pmatrix}&\succeq 0 \qquad \forall i
+    \end{alignat*}
+    After we have solved this program we can obtain a solution to the original problem by computing $P = B^\top B$ and $c = B^{-1}d$.
+    
+
+\end{document}

@@ -1,0 +1,70 @@
+\documentclass[answers]{exam}
+
+\input{header.tex}
+
+% ------------------------------
+
+\begin{document}
+
+	$ $
+	\begin{center}
+		\huge \textbf{Exercise session notes - Week 4}  \\ \vspace*{3mm}
+        \Large{Support Vector Machine + Duality}
+	\end{center}
+	$ $\\
+
+    \section{Support Vector Machine}
+
+    We first review the definition of a Support Vector Machine (SVM). 
+    \paragraph*{Definition.}
+        \textbf{Support Vector Machine} \\
+        \underline{Input.} points $x_1,\ldots, x_m\in \R^n$ with labels $y_1,\ldots, y_m\in \{-1,1\}$. \\ 
+        \underline{Output.} Hyperplane $(w, b)$ separating points with different labels, i.e.
+        \begin{align*}
+            w^\top x_i + b \geq 1 \quad&\forall i \text{ with } y_i = 1 \\ 
+            w^\top x_i + b \leq -1 \quad&\forall i \text{ with } y_i = -1
+        \end{align*}
+        maximizing the margin between the set of points.
+    \begin{center}
+        \includegraphics[width=0.4\textwidth]{SVM.PNG}
+    \end{center}
+
+    In the lecture we saw that if the points are linearly separable, then the margin is given by $\tfrac{2}{\norm{w}}$. Therefore we can model the problem as the following convex program.
+    \begin{alignat*}{3}
+        \min\quad\quad \norm{w}^2& && \leftarrow \text{convex objective}\\ 
+        y_i(w^\top x_i + b) &\geq 1 &&\leftarrow \text{linear constraint}\\ 
+        w,b&\text{ free}\quad\quad &&
+    \end{alignat*}
+    Often the set of points is not linearly separable, and in this case we can make use of Feature Maps. Assume we have the following set of points
+    \begin{center}
+        \includegraphics*[width=0.3\textwidth]{FeatureMaps.PNG}
+    \end{center}
+    Note that these points are not linearly separable but we see that the crosses are concentrated within some range and circles are outside of that range. Therefore we apply the feature map $(x,y)\mapsto (x,y, x^2+y^2)$ and obtain a new set of points that are now linearly separable and we can apply the SVM algorithm.
+    \begin{center}
+        \includegraphics*[width=0.4\textwidth]{FeatureMaps2.PNG}
+    \end{center}
+    Note that although there always exists a feature map that makes the points linearly separable it is usually very hard to find one.
+
+    \section{Duality}
+    Given is a \underline{general} mathematical program (P)
+    \begin{align*}
+        \min\set{f(x)}{g_i(x)\leq 0,\ h_j(x) = 0}
+    \end{align*}
+    For such a program we define the \imp{Lagrangian} 
+    $$ L(x,\lambda, \nu) = f(x) + \sum \lambda_i g_i(x) + \sum \nu_j h_j(x) $$
+    with Lagrange multipliers $\lambda_i\geq 0$, $\nu_j\in \R$. Note that the Lagrangian is affine in $\lambda, \nu$ and for any point $x$ feasible for (P) we have 
+    $$ L(x,\lambda, \nu) \leq f(x) \quad\quad \text{for } \lambda\geq 0, \nu \text{ free} $$
+    We define the \imp{Lagrange dual function} 
+    $$ \hat{L}(\lambda, \nu) = \inf_{x}\ L(x,\lambda, \nu) $$
+    and note that this function is \underline{concave} (as infimum of concave functions). Finally we define the \imp{Lagrange dual program} (D) 
+    \begin{align*}
+        \max\set{\hat{L}(\lambda, \nu)}{\lambda \geq 0,\ \nu \text{ free}}
+    \end{align*}
+    Let's do some simple calculations: For any feasible point $x$ for (P) and any feasible point $\lambda, \nu$ for (D) it holds
+    \begin{align*}
+        \hat{L}(\lambda, \nu)\ \leq\ L(x,\lambda, \nu)\ \leq\ f(x)
+    \end{align*}
+    In particular, since the the two sides of the inequality are independent, we can squash the values and we get 
+    $$ \max_{\lambda, \nu}\ \hat{L}(\lambda, \nu)\ \leq\ \min_{x}\ f(x) $$
+    This just says that if the two programs are feasible, the optimal value of (D) gives us a lower bound on the optimal value of (P). This property is a special case of the \underline{Weak Duality Theorem}. Moreover note that for any general mathematical program (P) its Lagrange dual program (D) is always a convex program, therefore it can be solved efficiently. In particular for any (also NP-hard) problem we can find efficiently a lower bound on the optimal value. Next week we will see the general statement of Weak Duality Theorem and the Strong Duality Theorem. 
+\end{document}

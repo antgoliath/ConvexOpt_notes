@@ -1,0 +1,66 @@
+\documentclass[answers]{exam}
+
+\input{header.tex}
+
+% ------------------------------
+
+\begin{document}
+
+	$ $
+	\begin{center}
+		\huge \textbf{Exercise session notes - Week 7}  \\ \vspace*{3mm}
+        \Large{Theorem of Alternatives}
+	\end{center}
+	$ $\\
+
+	In this week we viewed how to apply duality theory for the study of feasibility of a system involving inequalities and equalities. Consider the following system (S1)
+	\begin{alignat*}{2}
+		g_i(x) &\leq 0 \quad \forall i\qquad (S1) \\ 
+		Ax &= b
+	\end{alignat*}
+	then we can check its feasibility by solving the following mathematical program (P1)
+	\begin{alignat*}{2}
+		\min \qquad 0& \qquad\qquad\qquad (P1)\\ 
+		\text{s.t.}\quad g_i(x) &\leq 0 \quad \forall i \\ 
+		Ax &= b
+	\end{alignat*}
+	We obtain 
+	\begin{align*}
+		(S1) \text{ is feasible }\iff (P1) \text{ has optimal value 0}
+	\end{align*}
+	Let's look at the dual program (P2) of (P1)
+	\begin{alignat*}{2}
+		\max \quad \hat{L}(\lambda, \nu) &= \inf_{x} \left(\sum_i \lambda_i g_i(x) + \nu^\top (Ax - b)\right) \qquad (P2) \\ 
+		\text{s.t.}\quad \lambda &\geq 0
+	\end{alignat*}
+	If we just consider the system (S2)
+	\begin{alignat*}{2}
+		\hat{L}(\lambda, \nu) &> 0 \qquad (S2) \\ 
+		\text{s.t.}\quad \lambda &\geq 0
+	\end{alignat*}
+	by weak duality we obtain 
+	\begin{align*}
+		(S1) \text{ is feasible }&\iff (P1) \text{ has optimal value 0} \\
+		&\implies (P2) \text{ has optimal value 0} \iff (S2) \text{ is infeasible} 
+	\end{align*}
+	and 
+	\begin{align*}
+		(S2) \text{ is feasible }&\iff (P2) \text{ has optimal value >0} \\
+		&\implies (P1) \text{ has optimal value }\infty \iff (S1) \text{ is infeasible} 
+	\end{align*}
+	Therefore the two system of inequalities (S1) and (S2) are \underline{weak alternatives} (at most one is feasible). \\ 
+	If we swap inequalities with strictly inequalities we get the following systems:
+	\begin{alignat*}{2}
+		g_i(x) &< 0 \quad \forall i\qquad (S3) \\ 
+		Ax &= b
+	\end{alignat*}
+	and 
+	\begin{alignat*}{2}
+		\hat{L}(\lambda, \nu) &\geq 0 \qquad \qquad (S4) \\ 
+		\text{s.t.}\quad \lambda &\in \R^n{\geq 0},\ \lambda\neq 0
+	\end{alignat*}
+	Then, if there exists a point $x$ in the relative interiour of the program (P1), then the two systems are \underline{strong alternatives} (exactly one is feasible). The proof uses Slater's condition applied on an auxiliary program and convexity of $g$, and you can find it on the script (Proposition 3.7.5).
+
+
+    
+\end{document}

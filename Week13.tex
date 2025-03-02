@@ -1,0 +1,117 @@
+\documentclass[answers]{exam}
+
+\input{header.tex}
+
+% ------------------------------
+
+\begin{document}
+
+	$ $
+	\begin{center}
+		\huge \textbf{Exercise session notes - Week 13}  \\ \vspace*{3mm}
+        \Large{Log-Log convexity + Geometric Programs}
+	\end{center}
+	$ $\\
+
+    First we reviewed the theory behind log- and log-log-convexity. 
+    \begin{definition}
+        A function $f:X\to \R$ is called \imp{log-convex} if $f(x) > 0$ and $\log f$ is convex. \\ 
+        A function $f:X\to \R$ is called \imp{log-concave} if $1/f$ is log-convex. 
+    \end{definition}
+
+    \begin{proposition}
+        A function $f$ is log-convex iff $f > 0$ and 
+        $$ f\left(tx + (1-t)y\right) \leq f(x)^t \cdot f(y)^{1-t}\qquad \forall x,y,t $$
+    \end{proposition}
+    \begin{remark} $\ $
+        \begin{itemize}
+            \item If $f$ is log-convex then $f$ is convex 
+            \item Sum $f_1+f_2$, product $\alpha f$, product $f_1\cdot f_2$ of log-convex functions are log-convex 
+            \item Affine $a^\top x + b$ is log-concave 
+            \item Powers $x^a$ is log-convex for $a\leq 0$ and log-concave for $a \geq 0$
+            \item Exponentials $e^{ax}$ is log-affine 
+            \item Determinant $\det(X)$ is log-concave
+        \end{itemize}
+    \end{remark}
+
+    \begin{definition}
+        A function $f:X\to \R$ is \imp{log-log-convex} if $f > 0$ and $\log f(e^{x_1}, \ldots, e^{x_n})$ is convex.
+    \end{definition}
+    \begin{proposition}
+        A function $f$ is log-log-convex iff $f> 0$ and 
+        $$ f\left(x^t\circ y^{1-t}\right) \leq f(x)^t \cdot f(y)^{1-t} $$
+        where the product and the powers on the left are pointwise, i.e.
+        \begin{align*}
+            x^t\circ y^{1-t} = \begin{pmatrix}
+                x_1^t \cdot y_1^{1-t} \\ 
+                \vdots \\ 
+                x_n^t \cdot y_n^{1-t}
+            \end{pmatrix}
+        \end{align*}
+    \end{proposition}
+    \begin{proposition}
+        A function $f$ is log-log-convex iff the log-log epigraph 
+        $$ \log \operatorname*{epi} f = \set{(\log x,\log t)}{f(x) \leq t} $$
+        is a convex set.
+    \end{proposition}
+
+    \begin{remark} $\ $
+        \begin{itemize}
+            \item Posynomials are log-log-convex 
+            \item Maximum $\max\{x_i\}$ is log-log-convex 
+            \item $L_p$-Norms are log-log-convex
+        \end{itemize}
+    \end{remark}
+
+    Now we are able to define a Geometric Program. A \imp{monomial} is a function defined as  
+    $$ \textbf{x} \mapsto c\cdot x_1^{\alpha_1}\cdots x_n^{\alpha_n} $$
+    with $c > 0$ and $\alpha_i \in \R$. A \imp{posynomial} is a function of the form 
+    $$ \textbf{x} \mapsto \sum_j c_j\cdot x_1^{\alpha_1^j}\cdots x_n^{\alpha_n^j} $$
+    with $c_j > 0$ and $\alpha_i^j \in \R$, so a posynomial is just any sum of monomials. Finally a Geometric program has the form
+    \begin{align*}
+        \min \qquad f(x)& \\ 
+        \text{s.t.} \qquad g_i(x)& \leq 1\qquad \forall i \\ 
+        h_j(x) &= 1\qquad \forall j 
+    \end{align*}
+    where $f, g_i$ are posynomials and $h_j$ are monomials. An important property of GPs is the following 
+    \begin{proposition}
+        Any Geometric Program can be casted into an equivalent convex program by a change of variables.
+    \end{proposition}
+
+    \subsubsection*{Exercise 11.2 (Model Wheel Chair Ramp)}
+    Finally we solved together Ex.11.2 (Model Wheel Chair Ramp) from the Exercise Sheet.
+    We formulated the problem as a the following GP.
+    \begin{alignat*}{3}
+        \min &&\qquad C_mw\ell + \frac{C_w}{2} wdh & \\ 
+        \text{s.t.}&& \quad 5hd^{-1} &\leq 1 \\ 
+        &&\ell w^{-1} &\leq 1 \\ 
+        &&d^2\ell^{-2} + h^2\ell^{-2} &\leq 1 \\ 
+        &&h &\in [0.15, 1.5] \\ 
+        &&w &\in (0, 1.5] \\ 
+        &&d &\in (0, 1.5] 
+    \end{alignat*}
+    Recall that we relaxed the last constraint with the following
+    \begin{claim}{Any optimal solution of (GP) is an optimal solution for the problem (it satisfies the constraint with equality)}
+        Assume we have a optimal solution $(w, h, d, \ell)$. If $d^2 + h^2= \ell^2$ then we are done. Otherwise we let 
+        \begin{align*}
+            \tilde{\ell}^2 := d^2 + h^2 < \ell^2
+        \end{align*}
+        Then $(w, h, d, \tilde{\ell})$ is still a feasible solution with cost 
+        \begin{align*}
+            C_mw\tilde{\ell} + \frac{C_w}{2} wdh\ <\ C_mw\ell + \frac{C_w}{2} wdh
+        \end{align*}
+        Therefore $(w, h, d, \ell)$ is not \underline{optimal}. \lightning
+    \end{claim}
+    Finally we can apply the log-log transformation to the objective and constraints and we obtain the following equivalent convex problem 
+    \begin{alignat*}{3}
+        \min &&\qquad \log(C_me^{W+L} + \frac{C_w}{2} e^{W+D+H}) & \\ 
+        \text{s.t.}&& \quad \log(5e^{H-D}) &\leq 0 \\ 
+        &&\log(e^{L - W}) &\leq 0 \\ 
+        &&\log(e^{2D-2L} + e^{2H-2L}) &\leq 0 \\ 
+        &&H &\in [\log(0.15), \log(1.5)] \\ 
+        &&W &\in (-\infty, \log(1.5)] \\ 
+        &&D &\in (-\infty, \log(1.5)] 
+    \end{alignat*}
+    (Recall that log-sum-exp is a convex function). After that we can return to the original variables by 
+    $$ w = e^{W},\ \ d= e^{D},\ \ \ell = e^{L},\ \ h=e^{H} $$
+\end{document}

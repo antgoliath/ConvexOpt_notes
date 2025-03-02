@@ -1,0 +1,69 @@
+\documentclass[answers]{exam}
+
+\input{header.tex}
+
+% ------------------------------
+
+\begin{document}
+
+	$ $
+	\begin{center}
+		\huge \textbf{Exercise session notes - Week 2}  \\ \vspace*{3mm}
+        \Large{Conic optimization programs}
+	\end{center}
+	$ $\\
+    
+	Today we introduced the conic optimization program, as an example of the convex optimization program (Chapter 2.2 in the course notes). Recall that a cone is a set $K\subseteq \R^n$ such that  
+	$$ x\in K,\ \lambda\in \R_{\geq 0}\implies \lambda\cdot x \in K $$ 
+	Moreover a cone is said to be proper, if it is solid ($\operatorname*{int}(K)\neq \o$), pointed (it contains no lines), convex and closed.
+	\begin{definition}
+		Let $K\subseteq \R^n$ be a proper cone and let $A\in \R^{m\times n}$, $b\in \R^m$ and $c\in \R^n$. A \imp{conic program} has the following form:
+		\begin{alignat*}{3}
+			\min\quad c^{\top} x& && \leftarrow \text{affine objective}\\ 
+			Ax &= b &&\leftarrow \text{linear constraint}\\ 
+			x&\in K\quad\quad &&\leftarrow \text{$x$ in the cone}
+		\end{alignat*}
+	\end{definition}	
+	So for the following example, the feasible set of the optimization program is the orange set.
+	\begin{center}
+		\includegraphics[width=0.4\textwidth]{ExampleConicProgram.PNG}
+	\end{center}
+	For a conic optimization program we can also define its dual formulation.
+	\begin{definition}
+		Let $K\subseteq \R^n$ be a proper cone and let $A\in \R^{m\times n}$, $b\in \R^m$ and $c\in \R^n$. The \imp{dual formulation} of a conic optimization program in standard form is	
+		\begin{align*}
+			\max\quad\quad b^{\top} y&\\ 
+			c- A^\top y &\in K^*
+		\end{align*}
+		where $K^*$ is the dual cone of $K$, i.e.
+		$$ K^* = \set{y\in \R^n}{y^\top x \geq 0\quad\forall x\in K} $$
+	\end{definition}
+	These formulation can be also extended to a general vector space instead of $\R^n$, for example the set of polynomials with real coefficients.
+	\begin{remark}
+		As we saw in the lecture, if we pick $K = \R^n_{\geq 0}$ the non negative orthant (recall that $\R^n_{\geq 0}$ is a proper cone and self dual), then we will get the primal-dual formulation of LPs:
+		\begin{align*}
+			\text{Primal:} \quad\quad\quad&& \text{Dual:}\quad\quad\quad\quad\quad&\\
+			\min\quad c^{\top} x&& \max \quad\quad b^\top y &\\ 
+			Ax &= b & c-A^\top y &\in \R_{\geq 0}^n\\
+			x &\in \R^n_{\geq 0} & &
+		\end{align*}
+	\end{remark}
+	An important theorem about conic optimization programs is the weak duality theorem. It says that the optimal value of the dual always gives us a lower bound on the optimal value of the primal.
+	\begin{theorem}[Weak duality for conic programs]
+		Let $x,y$ be feasible solutions to the primal-dual formulation of some conic program. Then 
+		$$ c^\top x \geq b^\top y $$
+	\end{theorem}
+	\begin{proof}
+		Let $x,y$ feasible solutions, then 
+		\begin{align*}
+			c^\top x -y^\top b &= c^\top x - y^\top Ax &\text{($Ax = b$)}\\ 
+			&= c^\top x - (A^\top y)^\top x &\\ 
+			&= (c - A^\top y)^\top x&\\ 
+			&\geq 0 & \text{($c - A^\top y\in K^*$)}
+		\end{align*}
+	\end{proof}
+	For linear programs there is also a theorem called Strong Duality, which says that the gap between the primal optimal value and the dual optimal value is zero. Unfortunately, this theorem holds unconditionally only for LPs. Later in the course we will see an example of conic program for which strong duality does not hold, and give sufficient conditions under which strong duality does hold.
+
+
+
+\end{document}

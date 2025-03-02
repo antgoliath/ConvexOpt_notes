@@ -1,0 +1,82 @@
+\documentclass[answers]{exam}
+
+\input{header.tex}
+
+% ------------------------------
+
+\begin{document}
+
+	$ $
+	\begin{center}
+		\huge \textbf{Exercise session notes - Week 10}  \\ \vspace*{3mm}
+        \Large{Second Order Cone Program + Robust Optimization}
+	\end{center}
+	$ $\\
+
+    \section{Convex Programs and Inclusions}
+    \noindent Firstly we reviewed the types of convex programs that we studied so far.
+    \begin{alignat*}{3}
+        \text{LP:}\qquad    & \min\ f^\top x \quad \text{s.t}\quad Ax\leq b \quad &&;\quad Fx = g \\
+        \text{QP:}\qquad    & \min\  f^\top x \quad \text{s.t}\quad x^\top A x + b\top x\leq c \quad &&;\quad Fx = g  \\
+        \text{SOCP:}\qquad  & \min\  f^\top x \quad \text{s.t}\quad \norm{Ax + b}_2 \leq c^\top x + d \quad &&;\quad Fx = g \\
+        \text{SDP:}\qquad   & \text{...} && \\
+        \text{CP:}\qquad    & \min\  f^\top x \quad \text{s.t}\quad x\in K \quad &&;\quad Fx = g \\
+        \text{ConvP:}\qquad & \min\  f(x) \quad \text{s.t}\quad x\in C\text{ convex set}\quad &&;\quad Fx = g
+    \end{alignat*}
+    We then pictured the diagram of all the inclusions between these sets.
+    \begin{center}
+        \includegraphics*[width=0.3\textwidth]{DiagramConvexPrograms.png}
+    \end{center}
+    The inclusions $\text{LP}\subseteq \text{QP}$, $\text{SOCP}\subseteq \text{CP}$ and $\text{CP}\subseteq \text{ConvP}$ are trivial. Then we proved $\text{ConvP}\subseteq \text{CP}$ and $\text{QP}\subseteq \text{SOCP}$, and next week we will consider also the Semi Definite Programs (SDP).
+    \paragraph{$\text{ConvP}\subseteq \text{CP}$.} Consider a general convex program 
+    $$ \min\  f(x) \quad \text{s.t}\quad x\in C\text{ convex set}\ ;\quad Fx = g $$
+    Then we can write an equivalent program as 
+    \begin{align*}
+        & \min\  t\quad \text{s.t}\quad t \geq f(x)\ ;\  x\in C\text{ convex set}\ ;\quad Fx = g \\
+        \iff & \min\  t\quad \text{s.t}\quad (x,t)\in \operatorname*{epi}(f)\ ;\  (x,t)\in C\times \R \ ;\quad Fx = g
+    \end{align*}
+    Let $D:= \operatorname*{epi}(f) \cap (C\times \R)$ and note that this is a convex set. Then we pick the conic hull $K = \operatorname*{cone}(D\times \{1\})$ which is 
+    \begin{center}
+        \includegraphics*[width=0.4\textwidth]{ConvD.PNG}
+    \end{center}
+    Therefore $(x,t)\in D \iff (x,t,1)\in E$. Finally we can write the equivalent conic program as 
+    $$ \min\  t \quad \text{s.t}\quad (x,t,s)\in K\ ;\quad s=1\ ;\quad Fx = g $$
+    \paragraph{$\text{QP}\subseteq \text{SOCP}$.} Consider a general quadratic program with $A$ being a positive definite matrix
+    $$ \min\  f^\top x \quad \text{s.t}\quad x^\top Ax + b^\top x + c\leq 0\ ;\quad Fx = g $$
+    Recall that by the Cholesky Decomposition there exists a matrix $B$ with $A = B^\top B$. Then we can write an equivalent program as 
+    \begin{align*}
+        & \min\  f^\top x\quad \text{s.t}\quad x^\top B^\top B x \leq -b^\top x - c\ ;\quad Fx = g \\ 
+        & \min\  f^\top x\quad \text{s.t}\quad \norm{B x}_2^2 \leq -b^\top x - c\ ;\quad Fx = g
+    \end{align*}
+    Then recall the definition of the rotated Lorentz cone: 
+    $$ \s{L}_{rot}^{m} = \set{(x,y,z)}{\norm{x}_2^2 \leq 2yz} $$
+    Therefore we can model the program as the following SOCP 
+    $$ \min\  f^\top x \quad \text{s.t}\quad (Bx,\ -b^\top x - c,\ \tfrac{1}{2}) \in \s{L}_{rot}^m \ ;\quad Fx = g $$
+
+
+    \section{Robust Optimization}
+    Assume we are working for an airline company and we want to assign people to fligths. We model this problem as an LP. In a perfect world we can write 
+    $$ \max \text{\# people served} \quad\text{s.t.}\quad \text{assignment is feasible} $$
+    Since flight disruptions may happen (flight cancellations, delays) we want to find an assignment that works for any possible scenario. Such a solution is called a \underline{Robust Solution}. A non-example would be:
+    \begin{center}
+        Rome $\to$ Zurich (wait 15 min)\\ 
+        Zurich $\to$ London
+    \end{center}
+    This solution is clearly feasible but a small delay could change entirely our assignment, therefore it is not Robust. \\
+    Let's formalize this problem (Ex. 6.6 from Lecture Notes). We want to solve an LP
+    \begin{align*}
+        \min\quad c^\top x \quad \text{s.t.}\quad a^\top x \leq b\ ,\quad x\geq 0
+    \end{align*}
+    but the vector $a\in \R^n$ is uncertain, it varies in some Ellipse
+    $$ a\in E = \set{a_0 + P u}{\norm{u}_2\leq 1} $$
+    for $a_0$ the center and $P$ the matrix corresponding to the stretch of the Ellipse. Our goal is to find a \underline{Robust} solution, so a point $x$ that is feasible for any choice of $a$ and with minimal value. Therefore we may require
+    \begin{align*}
+        b &\geq \sup_{a\in E} a^\top x \\ 
+        &= a_0^\top x + \sup_{\norm{u}\leq 1} u^\top P^\top x \\ 
+        &= a_0^\top x + \norm{P^\top x}_2
+    \end{align*}
+    Therefore we can model the robust LP as the following SOCP 
+    \begin{align*}
+        \min\quad c^\top x \quad \text{s.t.}\quad a_0^\top x + \norm{P^\top x}_2 \leq b\ ,\quad x\geq 0
+    \end{align*}
+\end{document}

@@ -1,0 +1,84 @@
+\documentclass[answers]{exam}
+
+
+\input{header.tex}
+
+% ------------------------------
+
+\begin{document}
+
+	$ $
+	\begin{center}
+		\huge \textbf{Exercise session notes - Week 14}  \\ \vspace*{3mm}
+        \Large{Interiour Point Method}
+	\end{center}
+	$ $\\
+
+    As always we want to solve a convex program
+    \begin{align*}
+        \min\quad f(x)& \\ 
+        \text{s.t} \quad g(x) &\leq 0 \\
+        Ax &= b 
+    \end{align*}
+    Assume the problem satisfies Slater's condition, then strong duality holds and the dual optimum is attained, i.e. there exists a point $(x^*, \lambda^*, \mu^*)$ satisfying the KKT conditions:
+    \begin{enumerate}
+        \item Primal feasibility: $Ax = b$, $g(x) \leq 0$
+        \item Dual feasibility: $\lambda \geq 0$
+        \item Comp. Slackness: $\mu\cdot g(x) = 0$ 
+        \item Optimal Lagrangian: $\nabla f(x) + \mu\cdot \nabla g(x) + A^\top \lambda = 0$ 
+    \end{enumerate} 
+    As in the duality chapter, we can find an equivalent program by introducing the function $I_{\text{-}}(\cdot)$:
+    \begin{align*}
+        \min\quad f(x) + I_{\text{-}}(g(x))& \\ 
+        \text{s.t} \quad Ax &= b
+    \end{align*}
+    In the Interiour point method we approximate this function with the logarithmic barrier 
+    $$ x\mapsto -\frac{1}{t} \log(-x) $$
+    
+    \begin{center}
+        \includegraphics[width=0.3\textwidth]{BarrierFunction.PNG}
+    \end{center}
+    Note that by increasing $t$ we get a better approximation of the function $I_{-}(\cdot)$, so the new program (P) is 
+    \begin{align*}
+        \min\quad f(x) - \tfrac{1}{t} \log(-g(x)) & \\ 
+        \text{s.t} \quad Ax &= b
+    \end{align*}
+
+    The set of tuples $\set{(x^*(t),t)}{t>0}$, for $x^*(t)$ being the minimizer in the previous program, is called \underline{central path}. In the Barrier Method we try to solve the original convex problem by picking solutions in the central path for larger and larger $t$. 
+
+    \clearpage
+
+    \begin{algorithm}
+        \caption{Barrier Method (Phase II)}\label{alg:cap1}
+        \begin{algorithmic}
+        \STATE Given a strictly feasible solution $x$, $t>0$, tolerance $\varepsilon$ and incrementing factor $\mu>1$
+        \WHILE{gap of solution $ m/t > \varepsilon$}
+            \STATE Step: solve (P) with given $t$ using Newton method (starting at point $x$) and find solution $x^*(t)$
+            \STATE Update: $x\leftarrow x^*(t)$
+            \STATE Increment: $t \leftarrow \mu \cdot t$
+        \ENDWHILE
+        \end{algorithmic}
+    \end{algorithm}
+
+    
+    
+    \begin{algorithm}
+        \caption{Barrier Method (Phase I)}\label{alg:cap2}
+        \begin{algorithmic}
+        \STATE Solve the convex program $\min\set{s}{g(x) \leq s,\ Ax = b}$ using Barrier Method (Phase II) with any starting point $x$ in the domain of the problem and any $s> g(x)$ large enough. 
+        \end{algorithmic}
+    \end{algorithm}
+
+    We can see the implementation of the Barrier Method applied to the program 
+    \begin{align*}
+        \min\quad x^2 + y^2& \\ 
+        \text{s.t} \quad (x-1)^2 + (y-1)^2 &\leq 1
+    \end{align*}
+
+    \vspace*{1cm}
+
+    \begin{center}
+        \includegraphics[width=0.9\textwidth]{BarrierMethod.png}
+    \end{center}
+
+\end{document}

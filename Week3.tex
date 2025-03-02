@@ -1,0 +1,80 @@
+\documentclass[answers]{exam}
+
+\input{header.tex}
+
+% ------------------------------
+
+\begin{document}
+
+	$ $
+	\begin{center}
+		\huge \textbf{Exercise session notes - Week 3}  \\ \vspace*{3mm}
+        \Large{Convex Functions}
+	\end{center}
+	$ $\\
+    
+    \paragraph*{Definitions.} A function $f:X\to \R$ is convex if $X$ is convex and one of the following (equivalent) conditions hold:\vspace{5mm} \\ 
+    \begin{minipage}{12cm}
+        \begin{itemize}
+            \item $0$th-order characterization: for any $x,y\in X$ and $\lambda\in [0,1]$ we have 
+            $$ f(\lambda x + (1-\lambda)y)\leq \lambda f(x) + (1-\lambda)f(y) $$
+            Meaning: the line between any two points in the graph of $f$ lies above the function $f$. 
+        \end{itemize} 
+    \end{minipage}
+    \hspace*{3mm}
+    \begin{minipage}{6cm}    
+        \includegraphics[width=\textwidth]{0thConvex.PNG}
+    \end{minipage} \vspace*{5mm} \\ 
+    \begin{minipage}{12cm}
+        \begin{itemize}
+            \item $1$st-order characterization: for any $x,y\in X$ we have 
+            $$ f(y)\geq f(x) + \nabla f(x)^\top(y-x) $$
+            Meaning: the function $f$ entirely lies above the first order taylor approximation at each point $x$.
+        \end{itemize} 
+    \end{minipage}
+    \hspace*{3mm}
+    \begin{minipage}{6cm}    
+        \includegraphics[width=\textwidth]{1stConvex.PNG}
+    \end{minipage} \vspace*{5mm} \\ 
+    \begin{minipage}{12cm}
+        \begin{itemize}
+            \item $2$nd-order characterization: for any $x\in X$ we have 
+            \begin{align*}
+                &\ \nabla^2 f(x)\text{ is Positive Semi Definite} \\ 
+                \iff&\ v^\top\cdot  \nabla^2 f(x)\cdot v \geq 0 \quad\quad \forall v\in \R^n
+            \end{align*}
+            $$ $$
+            Meaning: the curvature of the function $f$ is positive (the function $f$ is "trying to go upwards").
+        \end{itemize} 
+    \end{minipage}
+    \hspace*{3mm}
+    \begin{minipage}{6cm}    
+        \includegraphics[width=\textwidth]{2ndConvex.PNG}
+    \end{minipage} \clearpage
+    \paragraph{Examples.} Here are some examples of important convex/concave functions. \vspace*{2mm}
+    \begin{center}\renewcommand{\arraystretch}{1.7}
+        \begin{tabular}{p{7cm}cp{7cm}}
+            Convex Functions. & $\qquad\longleftrightarrow\qquad$ & Concave Functions\\ 
+            \cmidrule{1-1}\cmidrule{3-3}
+            Affine $ax+ b$ for $a,b\in \R$ &  & Affine $ax+ b$ for $a,b\in \R$ \\ 
+            Exponentials $e^{ax}$ for $a\in \R$ & & Logarithms $\log_a(x)$ for $a \geq 1$ \\
+            Powers $x^a$ in $\R_{>0}$ for $a\leq 0$ or $a\geq 1$ & & Powers $x^a$ in $\R_{>0}$ for $a\in [0,1]$ \\
+            Any norm $\norm{x}_p = \left(\sum \abs{x_i}^p\right)^{1/p}$ for $p\in [1,\infty]$ & &  \\
+            LogSumExp $\log\left(e^{x_1}+\cdots + e^{x_n}\right)$.\newline 
+            $\hookrightarrow$ This is a smooth approximator of the max funcion. & &
+        \end{tabular}
+    \end{center}
+    \paragraph*{Properties.} Here are some operations that preserve convexity.
+    \begin{itemize}
+        \item Sums (conic combinations) $\sum a_i f_i$ for $a_i\geq 0$ \newline
+        In particular $f_1 + f_2$ is convex.
+        \item Affine Precompositions. If $f$ convex then $f(Ax + b)$ is convex. \newline
+        E.g. $\norm{Ax + b}$ is convex (Norm approximation error)
+        \item If $f(x,y)$ convex in $x$ then $g(x) := \sup_{y}f(x,y)$ is convex.\newline
+        E.g. Max eigenvalue of symmetric matrix $\lambda_{max}(A) = \sup_{\norm{y}=1}y^\top A y$
+        \item If $f$ convex + non-decreasing and $g$ convex then $f\circ g$ convex. \newline
+        E.g. If $g$ convex then $e^{g(x)}$ convex
+        \item If $f$ convex + non-increasing and $g$ concave then $f\circ g$ convex.\newline
+        E.g. If $g$ concave+positive then $1/g(x)$ convex.
+    \end{itemize}
+\end{document}
